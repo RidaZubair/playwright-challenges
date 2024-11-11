@@ -13,6 +13,7 @@ test('Login multiple times sucessfully @c1', async ({ page }) => {
     await expect(page.locator(`#successMessage`)).toContainText('Successfully submitted!');
     await expect(page.locator(`#successMessage`)).toContainText(`Email: test${i}@example.com`);
     await expect(page.locator(`#successMessage`)).toContainText(`Password: password${i}`);
+    await expect(page.locator('#successMessage')).toHaveClass(`success-message`); //Solution
   }
 });
 
@@ -22,8 +23,18 @@ test('Login animated form and logout sucessfully @c2', async ({ page }) => {
   await page.locator(`//*[@href='/challenge2.html']`).click();
   await page.locator('#email').fill(`test1@example.com`);
   await page.locator('#password').fill(`password1`);
-  await page.locator('#submitButton').click();
+  await page.evaluate(() => document.querySelector('#submitButton').click()); //Solution
+  //await expect(page.locator('#submitButton')).toHaveAttribute('style', /transform: translateX(0)/);
+  // page.locator('#submitButton').waitFor({
+  // await expect(page.locator('#submitButton')).toHaveJSProperty('style', async style => {
+  //   return window.getComputedStyle(style).transform === 'matrix(1, 0, 0, 1, 0, 0)';
+  // });
+  //await page.locator('#submitButton').click();
+  await expect(page.locator('#dashboard')).toBeVisible();
   await page.locator('#menuButton').click();
+  await expect(page.locator('#menuButton')).toBeVisible(); //Solution
+  await page.locator('#menuButton').click();
+  await expect(page.locator('#accountMenu')).toHaveClass(`dropdown-menu show`);
   await page.locator('#logoutOption').click();
 });
 
@@ -32,6 +43,7 @@ test('Forgot password @c3', async ({ page }) => {
   await page.goto('/');
   await page.locator(`//*[@href='/challenge3.html']`).click();
   await page.getByRole('button', { name: 'Forgot Password?' }).click();
+  await expect(page.locator('.back-to-login')).toContainText('Back to Login'); //Solution
   await page.locator('#email').fill('test@example.com');
   await page.getByRole('button', { name: 'Reset Password' }).click();
   await expect(page.getByRole('heading', { name: 'Success!' })).toBeVisible();
@@ -42,9 +54,13 @@ test('Forgot password @c3', async ({ page }) => {
 test('Login and logout @c4', async ({ page }) => {
   await page.goto('/');
   await page.locator(`//*[@href='/challenge4.html']`).click();
+  await page.waitForFunction(() => window.isAppReady === true); //Solution
+  await page.locator('#loginForm').waitFor({ state: 'visible' });
   await page.locator('#email').fill(`test@example.com`);
   await page.locator('#password').fill(`password`);
   await page.locator('#submitButton').click();
+  await expect(page.locator('#userEmail')).toContainText('test@example.com'); //assertion
   await page.locator('#profileButton').click();
   await page.getByText('Logout').click();
+  await expect(page.locator('#profileButton')).toBeHidden(); //assertion
 });
