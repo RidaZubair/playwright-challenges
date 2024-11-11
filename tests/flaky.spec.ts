@@ -24,17 +24,8 @@ test('Login animated form and logout sucessfully @c2', async ({ page }) => {
   await page.locator('#email').fill(`test1@example.com`);
   await page.locator('#password').fill(`password1`);
   await page.evaluate(() => document.querySelector('#submitButton').click()); //Solution
-  //await expect(page.locator('#submitButton')).toHaveAttribute('style', /transform: translateX(0)/);
-  // page.locator('#submitButton').waitFor({
-  // await expect(page.locator('#submitButton')).toHaveJSProperty('style', async style => {
-  //   return window.getComputedStyle(style).transform === 'matrix(1, 0, 0, 1, 0, 0)';
-  // });
-  //await page.locator('#submitButton').click();
-  await expect(page.locator('#dashboard')).toBeVisible();
+  await expect(page.locator('#userEmail')).toContainText('Logged in as: test1@example.com'); //assertion
   await page.locator('#menuButton').click();
-  await expect(page.locator('#menuButton')).toBeVisible(); //Solution
-  await page.locator('#menuButton').click();
-  //await expect(page.locator('#accountMenu')).toHaveClass(`dropdown-menu show`);
   await page.locator('#logoutOption').click();
 });
 
