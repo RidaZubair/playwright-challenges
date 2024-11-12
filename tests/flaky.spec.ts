@@ -23,11 +23,14 @@ test('Login animated form and logout sucessfully @c2', async ({ page }) => {
   await page.locator(`//*[@href='/challenge2.html']`).click();
   await page.locator('#email').fill(`test1@example.com`);
   await page.locator('#password').fill(`password1`);
+  //await page.waitForFunction(isStable);
   await page.evaluate(() => document.querySelector('#submitButton').click());
-  await expect(page.locator('#dashboard')).toBeVisible();
+  await expect(page.locator('#loginForm')).toHaveCSS('display', 'none');
+  await expect(page.locator('#dashboard')).toHaveCSS('display', 'block');
   await expect(page.locator('#userEmail')).toContainText('Logged in as: test1@example.com');
-  await page.locator('#menuButton').click();
   await expect(page.locator('#menuButton')).toBeVisible();
+  await page.locator('#menuButton').click();
+  await expect(page.locator('#accountMenu')).toHaveClass(`dropdown-menu show`);
   await page.locator('#logoutOption').click();
 });
 
